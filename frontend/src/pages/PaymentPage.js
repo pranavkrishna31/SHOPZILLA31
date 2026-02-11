@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 
+const API_BASE = 'https://shopzilla31.onrender.com';
+
 const PaymentPage = () => {
   const { clearCart } = useContext(CartContext);
   const location = useLocation();
@@ -13,17 +15,24 @@ const PaymentPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!paymentMethod) {
+      alert('Select a payment method');
+      return;
+    }
+
     const orderData = {
       user: { ...user, paymentMethod },
       items: [product],
     };
 
     try {
-      const res = await fetch('http://localhost:5000/api/orders', {
+      const res = await fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
       });
+
+      if (!res.ok) throw new Error('Order failed');
 
       await res.json();
       alert('✅ Order placed successfully!');
@@ -41,9 +50,8 @@ const PaymentPage = () => {
         <h3 className="card-title mb-4 text-center">Select Payment Method</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="payment" className="form-label">Payment Method</label>
+            <label className="form-label">Payment Method</label>
             <select
-              id="payment"
               className="form-select"
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
@@ -51,7 +59,7 @@ const PaymentPage = () => {
             >
               <option value="">-- Select Payment Method --</option>
               <option value="cod">Cash on Delivery</option>
-              <option value="card">Credit/Debit Card</option>
+              <option value="card">Credit / Debit Card</option>
               <option value="upi">UPI</option>
             </select>
           </div>

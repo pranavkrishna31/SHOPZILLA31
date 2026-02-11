@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE = 'https://shopzilla31.onrender.com';
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,7 +18,7 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/login', {
+      const response = await fetch(`${API_BASE}/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -25,7 +27,7 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('shopzillaUser', JSON.stringify(data.user)); // ✅ Save user data
+        localStorage.setItem('shopzillaUser', JSON.stringify(data.user));
         setError('');
         alert('Login successful!');
         navigate('/');
@@ -46,26 +48,26 @@ const LoginPage = () => {
           {error && <div className="alert alert-danger">{error}</div>}
 
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email address</label>
+            <label className="form-label">Email address</label>
             <input
               type="email"
               className="form-control"
-              id="email"
               placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
           <div className="mb-3">
-            <label htmlFor="password" className="form-label">Password</label>
+            <label className="form-label">Password</label>
             <input
               type="password"
               className="form-control"
-              id="password"
               placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
 

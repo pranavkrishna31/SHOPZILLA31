@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE = 'https://shopzilla31.onrender.com';
+
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -18,41 +20,40 @@ const RegisterPage = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const { name, email, password, confirmPassword } = formData;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { name, email, password, confirmPassword } = formData;
 
-  if (!name || !email || !password || !confirmPassword) {
-    alert('All fields are required.');
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    alert('Passwords do not match.');
-    return;
-  }
-
-  try {
-    const response = await fetch('http://localhost:5000/api/users/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password, confirmPassword }), // ✅ FIXED
-    });
-
-    const data = await response.json();
-
-    if (response.status === 201) {
-      alert('Registered successfully!');
-      navigate('/login');
-    } else {
-      alert(data.message || 'Registration failed.');
+    if (!name || !email || !password || !confirmPassword) {
+      alert('All fields are required.');
+      return;
     }
-  } catch (error) {
-    console.error('Registration error:', error);
-    alert('Something went wrong.');
-  }
-};
 
+    if (password !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/api/users/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, confirmPassword }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 201 || response.ok) {
+        alert('Registered successfully!');
+        navigate('/login');
+      } else {
+        alert(data.message || 'Registration failed.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Something went wrong.');
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -69,20 +70,22 @@ const handleSubmit = async (e) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Enter your name"
+                  required
                 />
               </div>
+
               <div className="mb-3">
-                <label className="form-label">Email address</label>
+                <label className="form-label">Email</label>
                 <input
                   type="email"
                   className="form-control"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Enter your email"
+                  required
                 />
               </div>
+
               <div className="mb-3">
                 <label className="form-label">Password</label>
                 <input
@@ -91,9 +94,10 @@ const handleSubmit = async (e) => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Create a password"
+                  required
                 />
               </div>
+
               <div className="mb-3">
                 <label className="form-label">Confirm Password</label>
                 <input
@@ -102,12 +106,14 @@ const handleSubmit = async (e) => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Confirm your password"
+                  required
                 />
               </div>
+
               <button type="submit" className="btn btn-primary w-100">
                 Register
               </button>
+
               <p className="mt-3 text-center">
                 Already have an account? <a href="/login">Login</a>
               </p>
