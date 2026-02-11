@@ -1,0 +1,9 @@
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-form input,
+.contact-form textarea {
+  margin-bottom: 1rem;
+}
