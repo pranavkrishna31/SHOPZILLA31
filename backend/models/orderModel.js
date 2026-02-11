@@ -1,0 +1,23 @@
+const mongoose = require('mongoose');
+
+const orderSchema = new mongoose.Schema({
+  user: {
+    name: String,
+    email: String,
+    phone: String,
+    address: String
+  },
+  items: [
+    {
+      name: String,
+      price: Number
+    }
+  ],
+  paymentMethod: String,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+module.exports = mongoose.model('Order', orderSchema);
