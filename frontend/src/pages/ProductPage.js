@@ -8,14 +8,17 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
-      .then((res) => res.json())
+    fetch(`https://shopzilla31.onrender.com/api/products/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Product not found');
+        return res.json();
+      })
       .then((data) => {
         setProduct(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Error fetching product:', err);
         setLoading(false);
       });
   }, [id]);
@@ -27,6 +30,7 @@ const ProductPage = () => {
     <div className="container mt-5">
       <div className="card mx-auto shadow p-4" style={{ maxWidth: '600px' }}>
         <h2 className="card-title text-center mb-3">{product.name}</h2>
+
         <img
           src={product.image}
           alt={product.name}
@@ -34,8 +38,8 @@ const ProductPage = () => {
           style={{ height: '300px', objectFit: 'cover' }}
           onError={(e) => (e.currentTarget.src = '/images/placeholder.png')}
         />
+
         <div className="card-body">
-          {/* INR formatting */}
           <p>
             <strong>💵 Price:</strong> ₹{product.price.toLocaleString('en-IN')}
           </p>

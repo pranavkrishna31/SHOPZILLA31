@@ -11,14 +11,17 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/products')
-      .then(res => res.json())
-      .then(data => {
+    fetch('https://shopzilla31.onrender.com/api/products')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch products');
+        return res.json();
+      })
+      .then((data) => {
         setProducts(data);
         setLoading(false);
       })
-      .catch(err => {
-        console.error(err);
+      .catch((err) => {
+        console.error('Error fetching products:', err);
         setLoading(false);
       });
   }, []);
