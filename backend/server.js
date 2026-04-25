@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const compression = require("compression");
 
 // Routes
 const productRoutes = require('./routes/productRoutes');
@@ -16,6 +17,7 @@ dotenv.config();
 connectDB();
 
 const app = express();
+app.use(compression());
 
 // Middleware
 app.use(cors());
