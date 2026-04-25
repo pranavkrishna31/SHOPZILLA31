@@ -74,3 +74,8 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+.blur-img {
+  filter: blur(10px);
+  transition: filter 0.3s ease;
+}

@@ -13,12 +13,14 @@ const ProductCard = ({ product }) => {
   return (
     <div className="card m-3 shadow-sm" style={{ width: '18rem' }}>
       <img
-        src={product.image}
-        className="card-img-top"
-        alt={product.name}
-        style={{ height: '200px', objectFit: 'cover' }}
-        onError={(e) => (e.currentTarget.src = '/images/placeholder.png')}
-      />
+  src={product.image}
+  className="card-img-top blur-img"
+  alt={product.name}
+  loading="lazy"
+  style={{ height: '200px', objectFit: 'cover', backgroundColor: '#eee' }}
+  onLoad={(e) => e.target.classList.remove('blur-img')}
+  onError={(e) => (e.currentTarget.src = '/images/placeholder.png')}
+/>
       <div className="card-body">
         <h5 className="card-title">{product.name}</h5>
 
