@@ -1,31 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const Product = require('../models/Product');
 
-// GET /api/products — get all products
-router.get('/', async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
+// ✅ IMPORT CONTROLLER (IMPORTANT)
+const {
+  getProducts,
+  getProductById
+} = require('../controllers/productController');
 
-// GET /api/products/:id — get single product
-router.get('/:id', async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-    res.json(product);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
 
-// POST /api/products — add new product
+// ✅ GET all products (uses cache now)
+router.get('/', getProducts);
+
+// ✅ GET single product
+router.get('/:id', getProductById);
+
+
+// ✅ POST (keep as is)
+const Product = require('../models/ProductModel');
+
 router.post('/', async (req, res) => {
   try {
     const { name, price, description, image, countInStock } = req.body;
@@ -44,6 +36,7 @@ router.post('/', async (req, res) => {
 
     const created = await product.save();
     res.status(201).json(created);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
